@@ -447,11 +447,11 @@ SOURCEVOLUME 	CLOUD-SNAP-ID					CREATED-TIME			STATUS
 dvol		pqr9-cl1/520877607140844016-50466873928636534	Fri, 07 Apr 2017 20:22:43 UTC	Done
 ```
 
-### Backup schedules
+### Cloud Backup schedules
 
-Backup schedules allow backups to be uploaded to cloud at periodic intervals of time. These schedules can be created through `pxctl`
+Cloud Backup schedules allow backups to be uploaded to cloud at periodic intervals of time. These schedules can be managed through `pxctl`
 
-```
+```text
 pxctl cloudsnap schedules --help
 Manage schedules for cloud-snaps
 
@@ -484,9 +484,9 @@ Global Flags:
   Use "pxctl cloudsnap schedules [command] --help" for more information about a command.
 ```
 
-#### Creating a Cloud Backup Schedule###
+### Creating a Cloud Backup Schedule
 
-```
+```text
 pxctl cloudsnap schedules create  --help
 Create a cloud-snap schedule
 
@@ -497,15 +497,15 @@ Usage:
     create, c
 
 Flags:
-	-f, --full              Force scheduled backups to be full always
-	-v, --volume string     Volume ID to set the cloud-snap schedule
-	-p, --periodic string   Cloudsnap interval in minutes (default "0")
-	--cred-id string    Cloud credentials ID to be used for the backup
-    -x, --max uint          Maximum number of cloud snaps to maintain, default 7 (default 7)
-	-d, --daily strings     Daily snapshot at specified hh:mm (UTC)
-	-w, --weekly strings    Weekly snapshot at specified weekday@hh:mm (UTC)
-    -m, --monthly strings   Monthly snapshot at specified day@hh:mm (UTC)
-    -h, --help              help for create
+  -f, --full              Force scheduled backups to be full always
+  -v, --volume string     Volume ID to set the cloud-snap schedule
+  -p, --periodic string   Cloudsnap interval in minutes (default "0")
+  --cred-id string    Cloud credentials ID to be used for the backup
+  -x, --max uint          Maximum number of cloud snaps to maintain, default 7 (default 7)
+  -d, --daily strings     Daily snapshot at specified hh:mm (UTC)
+  -w, --weekly strings    Weekly snapshot at specified weekday@hh:mm (UTC)
+  -m, --monthly strings   Monthly snapshot at specified day@hh:mm (UTC)
+  -h, --help              help for create
 
 Global Flags:
   --ca string        path to root certificate for ssl usage
@@ -521,26 +521,26 @@ Global Flags:
 
 The following example creates a daily schedule that retains maximum of 15 backups in the cloud. `--max` parameter indicates number of backups to retain in cloud. Most recent `--max` number of backups are retained and older backups are deleted periodically. Note that sometime while listing cloud backups you may see more than `--max` number of backups and this is due to incremental nature of backups. We may need to retain more than `--max` backups in order to allow `--max` backups to be restored at any given time.
 
-```
+```text
  pxctl cloudsnap schedules create testVol --daily 21:00 --max 15 --cred-id cc84ef11-6d94-4c20-b4b9-01615119a442
  Cloudsnap schedule created successfully
 
 ```
 
-#### Creating a Cloud Backup Schedule###
+### Creating a Cloud Backup Schedule
 Currently configured backup schedules can be listed using following pxctl command.
 
-```
+```text
 pxctl cloudsnap schedules list
-UUID										VOLUMEID				MAX-BACKUPS		FULL		SCHEDULE(UTC)
-078557a3-26c7-49b1-9822-34e6f816c2d1		648038464574631167		15				false		daily @21:00
+UUID						VOLUMEID			MAX-BACKUPS		FULL		SCHEDULE(UTC)
+078557a3-26c7-49b1-9822-34e6f816c2d1		648038464574631167		15			false		daily @21:00
 ```
 
 
-#### Deleting a Cloud Backup Schedule###
+### Deleting a Cloud Backup Schedule
 Backup schedules can be deleted using following pxctl command.
 
-```
+```text
 pxctl cloudsnap schedules  delete --uuid 078557a3-26c7-49b1-9822-34e6f816c2d1
 Cloudsnap schedule deleted successfully
 ```
