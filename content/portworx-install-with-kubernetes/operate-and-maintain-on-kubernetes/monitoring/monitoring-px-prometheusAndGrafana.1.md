@@ -6572,11 +6572,7 @@ First get the node port that grafana is using
   kubectl get svc -n kube-system grafana
   ```
 
-Access the Grafana dashboard by navigating to `http://<master_ip>:<service_nodeport>`. You would need to create a datasource for the Portworx grafana dashboard metrics to be populated.
-Navigate to Configurations --> Datasources.
-Create a datasource named `prometheus`. Enter the Prometheus endpoint as obtained in the install verification step for Prometheus from the above section.
-
-![grafanadatasource](/img/datasource-creation-grafana.png)
+Access the Grafana dashboard by navigating to `http://<master_ip>:<service_nodeport>`. 
 
 ### Post install verification
 
