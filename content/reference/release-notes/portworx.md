@@ -6,6 +6,62 @@ keywords: portworx, release notes
 series: release-notes
 ---
 
+## 2.5.1.3
+
+June 05, 2020
+
+## Fixes
+
+The following issues have been fixed:
+
+|**Issue Number**|**Issue Description**|
+|----|----|
+|PWX-13086| For vSphere 6.7.3 and above, create PX disks (vmdks) such that they don't get deleted on VM deletion. |
+|PWX-13542| Fixed in issue where PX would fail to come up vSphere using cloud drives when it cannot find the path of the attached disk|
+|PWX-13510| Added a new runtime option `rt_opts kvdb_failover_timeout_in_mins` to configure kvdb offline node failover timeout. Default value is set to 3 mins|
+
+## 2.5.2
+
+May 29, 2020
+
+### Improvements
+
+Portworx has upgraded or enhanced functionality in the following areas:
+
+| **Improvement Number** | **Improvement Description** |
+|----|----|
+| PWX-12737 | Added support for automatic cloud disk management for non-public Azure clouds like US Government, Germany and China clouds. |
+| PWX-13082 | You can now configure the frequency with which Portworx takes its KVDB backups using the `kvdb_dump_frequency_minutes` runtime option. |
+| PWX-10216 | Added support for Vault Namespaces. |
+| PWX-11288 | Added support for Vault Kubernetes Authentication. |
+| PWX-12603 | When sharedv4 volumes are in use, Portworx uses 16 NFS threads to process them by default. You can change the total number of threads Portworx uses by running the `pxctl cluster options update --sharedv4-threads <num>` command. |
+| PWX-12512 | PX-Essential can now refresh licenses through an HTTP or HTTPS proxy. |
+| PWX-13116 | Users can now request max backups to be enumerated anywhere between > 0 and < 5000. |
+
+### Fixes
+
+The following issues have been fixed:
+
+|**Issue Number**|**Issue Description**|
+|----|----|
+| PWX-13189 | A recursive `chmod` operation in Kubernetes 1.18 and lower caused mounts with large block volumes to hang when users set a security context for a pod using `fsGroup`. <br/><br/>**User Impact:** Users with hung mounts would see mount timeouts when creating a pod referencing large block volumes, and pod creation would fail. <br/><br/>**Resolution:** Portworx, Inc. added the `allow_others` storage class label that, when set to true, will apply a permission change to the mount path. This label should only be used for Kubernetes versions lower than 1.18. Users on newer Kubernetes versions can return to using `fsGroup` over the Portworx `allow_others=true` label. |
+| PWX-12655 | When Portworx images were uploaded to nodes via docker load command, Docker may not have set the image digest properly.<br/><br/>**User Impact:** When the image digest was not available, OCI-Monitor would not detect manually uploaded Portworx images, and would attempt to pull the Portworx image, potentially failing in air-gapped environments.<br/><br/>**Resolution:** Portworx now has improved image detection, even in cases where image digests are not available. |
+| PWX-13171 | The `px_volume_readthroughput`, `px_volume_writethrougput` and `px_volume_iops` metrics did not update.<br/><br/>**User Impact:** Users may have seen values for these metrics reported as zero.<br/><br/>**Resolution:** Portworx once again updates these metrics. |
+| PWX-12088 | Portworx used a version of IBM KeyProtect that caused a kernel panic if multiple threads tried to use it.<br/><br/>**User Impact:** Portworx nodes experiencing a kernel panic restarted, and some apps did not come back online after recovery.<br/><br/>**Resolution:** Portworx now uses IBM KeyProtect library v0.3.5, which solves this problem. |
+| PWX-12466 | The `--all` option for the `pxctl cloudmigrate start` CLI command has been deprecated. |
+
+## 2.5.1.2
+
+May 28, 2020
+
+### Improvements
+
+Portworx has upgraded or enhanced functionality in the following areas:
+
+| **Improvement Number** | **Improvement Description** |
+|----|----|
+| PWX-13175 | Portworx now supports sharedv4 volumes on hosts running Flatcar OS. |
+
 ## 2.5.1
 
 April 24, 2020
@@ -27,7 +83,7 @@ The following issues have been fixed:
 |**Issue Number**|**Issue Description**|
 |----|----|
 | PWX-11602 | When Portworx detected an issue with container volumes, for example, if a drive was removed, OCI-Monitor resulted in Portworx pods being stuck in a `CrashLoopBackupOff` state. <br/><br/> **User Impact:** Portworx pods in users' clusters would not recover. <br/><br/> **Resolution:** When Portworx (OCI-Monitor) detects an issue with container mounts, it sends a request to Kuberenetes to reset/reinitialize the Portworx pod, which fixes the issue. |
-| PWX-12289 | For the CRI-O container runtime, when OCI-Monitor is set to `ImagePullPolicy:IfNotPresent`, it should pull the PX-Enterprise image only when the image is not present on the system. The OCI-Monitor incorrectly identified the image as present while it wasn't. <br/><br/> **User Impact:** Portworx failed to pull the required image and OCI-Monitor failed. <br/><br/> **Resolution:** The OCI-Monitor `ImagePullPolicy` handling now properly pulls images. | 
+| PWX-12289 | For the CRI-O container runtime, when OCI-Monitor is set to `ImagePullPolicy:IfNotPresent`, it should pull the PX-Enterprise image only when the image is not present on the system. The OCI-Monitor incorrectly identified the image as present while it wasn't. <br/><br/> **User Impact:** Portworx failed to pull the required image and OCI-Monitor failed. <br/><br/> **Resolution:** The OCI-Monitor `ImagePullPolicy` handling now properly pulls images. |
 | PWX-12292 | When using OCI-Monitor, Portworx failed to drain its pods when required. <br/><br/> **User Impact:** OCI-Monitor failed to start and upgrade operations failed. <br/><br/> **Resolution:** OCI-monitor now properly starts and Portworx upgrades. |
 | PWX-12252 | For CRI-O integrations, the OCI-Monitor did not copy the install logs into its own output. As a consequence, the OCI-Monitor did not parse/retrieve the `INFO: Module version check: Success` install log line, and always triggered the cordoning/draining of the nodes. <br/><br/> **User Impact:** Upgrades to version 2.5.0 stalled on OpenShift and/or CRI-O container-runtime Kubernetes clusters. <br/><br/> **Resolution:** Portworx application cordoning and draining during the upgrade process now works properly, allowing upgrades. |
 | PWX-12180 | Portworx didn't send license server alerts for errors packaged into the response body of a valid REST call. <br/><br/> **User Impact:** Users did not see license server alerts for these kinds of errors. <br/><br/> **Resolution:** Portworx now treats these kinds of errors in the same manner as REST errors, and raises alerts accordingly. |
@@ -1307,7 +1363,7 @@ All customers on 1.2.x release will be able to upgrade to 1.4 but in a few speci
 * Support port mapping used by Portworx from 9001-9015 to a custom port number range by passing the starting
   port number in [install arguments](/install-with-other/docker/standalone)
 * Provide ability to do a [license transfer](/reference/knowledge-base/px-licensing) from one cluster to another cluster
-* Add support for [cloudsnap deletes](/reference/cli/cloud-snaps#pxctl-cloudsnap-delete)
+* Add support for [cloudsnap deletes](/reference/cli/cloud-snaps#deleting-a-cloud-backup)
 
 ### Key Fixes
 
